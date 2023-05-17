@@ -6,9 +6,22 @@
     <title>TV Show Project | Paulina Wywrot (PaulinaWywrot)</title>
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   </head>
 
   <body>
+    <div>
+    <label for="episode-search">Search</label>
+    <input type="search" id="episode-search" name="search" placeholder="Search Episode">
+   
+    <label for="episode-select">Choose an episode:</label>
+    
+    <select name="episodes" id="episode-select">
+      <option value="">--Please choose an option--</option>
+    </select>
+    </div>
     <div id="root">
     </div>
 
@@ -17,5 +30,12 @@
 
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
+        <footer>
+          <p>
+            Developed by Paulina Wywrot
+            | Data from
+            <a href="https://www.tvmaze.com/" target="_blank"> © TVmaze.com</a>
+          </p>
+        </footer>
   </body>
 </html>
