@@ -1,14 +1,10 @@
 //You can edit ALL of the code here
 const rootElem = document.getElementById("root");
 const input = document.getElementById("episode-search");
-const allEpisodes = getAllEpisodes();
+// const allEpisodes = getAllEpisodes();
 const selectInput = document.getElementById("episode-select");
 function setup() {
-  makePageForEpisodes(allEpisodes);
-  makePageForEpisodes(allEpisodes);
-  findEpisode();
-  createOption();
-  selectEpisode();
+  createFetch();
 }
 
 function makePageForEpisodes(episodeList) {
@@ -41,11 +37,11 @@ function createEpisode(episode) {
   episodeContainer.appendChild(summary);
 }
 
-function findEpisode() {
+function findEpisode(episodes) {
   input.addEventListener("input", (event) => {
     const inputValue = event.target.value.toLowerCase();
     rootElem.textContent = "";
-    const filteredEpisodes = allEpisodes.filter((episode) => {
+    const filteredEpisodes = episodes.filter((episode) => {
       return (
         episode.summary.toLowerCase().includes(inputValue) ||
         episode.name.toLowerCase().includes(inputValue)
@@ -55,8 +51,8 @@ function findEpisode() {
   });
 }
 
-function createOption() {
-  allEpisodes.forEach((episode) => {
+function createOption(episodes) {
+  episodes.forEach((episode) => {
     const newOption = document.createElement("option");
     newOption.innerHTML = `S${episode.season
       .toString()
@@ -66,15 +62,27 @@ function createOption() {
     selectInput.appendChild(newOption);
   });
 }
-function selectEpisode() {
+function selectEpisode(episodes) {
   selectInput.addEventListener("change", (event) => {
     const inputValue = event.target.value;
     rootElem.textContent = "";
-    const filteredEpisodes = allEpisodes.filter((episode) => {
+    const filteredEpisodes = episodes.filter((episode) => {
       return inputValue.includes(episode.name);
     });
     makePageForEpisodes(filteredEpisodes);
   });
+}
+
+function createFetch() {
+  fetch("https://api.tvmaze.com/shows/82/episodes")
+    .then((response) => response.json())
+    .then((allEpisodes) => {
+      makePageForEpisodes(allEpisodes);
+      findEpisode(allEpisodes);
+      createOption(allEpisodes);
+      selectEpisode(allEpisodes);
+    })
+    .catch((error) => console.log(error));
 }
 
 window.onload = setup;
