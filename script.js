@@ -1,17 +1,20 @@
+import getAllShows from "./shows.js"
+
 //You can edit ALL of the code here
 const rootElem = document.getElementById("root");
 const input = document.getElementById("episode-search");
 // const allEpisodes = getAllEpisodes();
+const shows = getAllShows();
 const selectShow = document.getElementById("show-select");
 const selectInput = document.getElementById("episode-select");
 function setup() {
   createFetch();
   createShowName();
-  selectShow();
+  select_Show();
 }
 
 function makePageForEpisodes(episodeList) {
-  for (one of episodeList) {
+  for (var one of episodeList) {
     createEpisode(one);
   }
 }
@@ -89,7 +92,7 @@ function createFetch() {
 }
 
 function createShowName() {
-  const shows = getAllShows();
+  // const shows = getAllShows();
   shows.forEach((show) => {
     const newOption = document.createElement("option");
     newOption.innerHTML = show.name;
@@ -97,8 +100,8 @@ function createShowName() {
   });
 }
 
-function selectShow() {
-  const shows = getAllShows();
+function select_Show() {
+  // const shows = getAllShows();
   selectShow.addEventListener("change", (event) => {
     const inputValue = event.target.value;
     rootElem.textContent = "";
