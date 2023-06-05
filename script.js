@@ -2,15 +2,22 @@
 const rootElem = document.getElementById("root");
 const input = document.getElementById("episode-search");
 // const allEpisodes = getAllEpisodes();
+const numberOfDisplayedElements = document.querySelector(".input-label");
+numberOfDisplayedElements.classList.add("input-style", "show-number");
+const showRoot = document.getElementById("show-root");
 const selectShow = document.getElementById("show-select");
 const selectInput = document.getElementById("episode-select");
+const shows = getAllShows();
 function setup() {
-  createFetch();
+  findShow(shows);
   createShowName();
-  selectShow();
+  select_Show();
+  displayShows(shows);
 }
 
 function makePageForEpisodes(episodeList) {
+  numberOfDisplayedElements.innerText = `Displaying ${episodeList.length} episodes`;
+  selectInput.style.display = "inline";
   for (one of episodeList) {
     createEpisode(one);
   }
@@ -31,7 +38,9 @@ function createEpisode(episode) {
     .toString()
     .padStart(2, "0")}E${episode.number.toString().padStart(2, "0")}
 `;
-  image.src = episode.image.medium;
+  if (episode.image !== null) {
+    image.src = episode.image.medium;
+  }
   summary.innerHTML = episode.summary;
 
   rootElem.appendChild(episodeContainer);
@@ -44,6 +53,7 @@ function findEpisode(episodes) {
   input.addEventListener("input", (event) => {
     const inputValue = event.target.value.toLowerCase();
     rootElem.textContent = "";
+    showRoot.textContent = "";
     const filteredEpisodes = episodes.filter((episode) => {
       return (
         episode.summary.toLowerCase().includes(inputValue) ||
@@ -51,6 +61,23 @@ function findEpisode(episodes) {
       );
     });
     makePageForEpisodes(filteredEpisodes);
+    numberOfDisplayedElements.innerText = `Displaying ${filteredEpisodes.length} episodes`;
+  });
+}
+
+function findShow(shows) {
+  input.addEventListener("input", (event) => {
+    const inputValue = event.target.value.toLowerCase();
+    rootElem.textContent = "";
+    showRoot.textContent = "";
+    const filteredShows = shows.filter((show) => {
+      return (
+        show.summary.toLowerCase().includes(inputValue) ||
+        show.name.toLowerCase().includes(inputValue)
+      );
+    });
+    displayShows(filteredShows);
+    numberOfDisplayedElements.innerText = `Displaying ${filteredShows.length} shows`;
   });
 }
 
@@ -97,11 +124,12 @@ function createShowName() {
   });
 }
 
-function selectShow() {
+function select_Show() {
   const shows = getAllShows();
   selectShow.addEventListener("change", (event) => {
     const inputValue = event.target.value;
     rootElem.textContent = "";
+    showRoot.textContent = "";
     const filteredShows = shows.filter((show) => {
       return inputValue.includes(show.name);
     });
@@ -115,6 +143,70 @@ function selectShow() {
       })
       .catch((error) => console.log(error));
   });
+}
+
+function displayShows(shows) {
+  selectShow.style.display = "inline";
+  selectInput.style.display = "none";
+  shows.map((show) => {
+    const showContainer = document.createElement("div");
+    showContainer.classList = "show-container";
+    const showTitle = document.createElement("h2");
+    showTitle.classList = "show-title";
+    showTitle.innerText = show.name;
+
+    const imageAndSummaryContainer = document.createElement("div");
+    imageAndSummaryContainer.classList = "flex-container";
+
+    const showDetails = document.createElement("div");
+    showDetails.classList = "show-details";
+    const showGenres = document.createElement("h4");
+    showGenres.innerText = `Genres: ${show.genres}`;
+    const showStatus = document.createElement("h4");
+    showStatus.innerText = `Status: ${show.status}`;
+    const showRuntime = document.createElement("h4");
+    showRuntime.innerText = `Runtime: ${show.runtime}`;
+    const showRating = document.createElement("h4");
+    showRating.innerText = `⭐ ${show.rating.average}`;
+
+    const showDetailsContainer = document.createElement("div");
+    showDetailsContainer.classList = "show-details-flex";
+    const showImage = document.createElement("img");
+    showImage.classList = "show-image";
+    if (show.image !== null) {
+      showImage.src = show.image.medium;
+    }
+    const showSummary = document.createElement("p");
+    showSummary.classList = "show-summary";
+    showSummary.innerHTML = `${show.summary}`;
+
+    showDetails.appendChild(showGenres);
+    showDetails.appendChild(showStatus);
+    showDetails.appendChild(showRuntime);
+    showDetails.appendChild(showRating);
+    imageAndSummaryContainer.appendChild(showImage);
+    imageAndSummaryContainer.appendChild(showSummary);
+    imageAndSummaryContainer.appendChild(showDetails);
+    showContainer.appendChild(showDetailsContainer);
+    showRoot.appendChild(showContainer);
+    showContainer.appendChild(showTitle);
+    showContainer.appendChild(imageAndSummaryContainer);
+
+    showTitle.addEventListener("click", (event) => {
+      rootElem.textContent = "";
+      showRoot.textContent = "";
+      fetch(`https://api.tvmaze.com/shows/${show.id}/episodes`)
+        .then((response) => response.json())
+        .then((allEpisodes) => {
+          makePageForEpisodes(allEpisodes);
+          findEpisode(allEpisodes);
+          createOption(allEpisodes);
+          selectEpisode(allEpisodes);
+        })
+        .catch((error) => console.log(error));
+    });
+  });
+  numberOfDisplayedElements.innerText = `Displaying ${shows.length} shows`;
 }
 
 window.onload = setup;
