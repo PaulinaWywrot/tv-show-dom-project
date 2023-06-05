@@ -165,7 +165,7 @@ function displayShows(shows) {
     const showStatus = document.createElement("h4");
     showStatus.innerText = `Status: ${show.status}`;
     const showRuntime = document.createElement("h4");
-    showRuntime.innerText = `Runtime: ${show.runtime}`;
+    showRuntime.innerText = `Runtime: ${show.runtime} minutes`;
     const showRating = document.createElement("h4");
     showRating.innerText = `⭐ ${show.rating.average}`;
 
