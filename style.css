@@ -17,6 +17,7 @@ body {
   grid-template-columns: repeat(4,1fr);
   grid-template-rows: repeat(19,auto);
   gap: 2rem;
+  background-color:#222222;
 }
 .navigation {
   display: flex;
@@ -68,7 +69,8 @@ body {
 
 .episode-container {
   display:flex;
-  flex-direction: column; 
+  flex-direction: column;
+   
 }
 .show-container {
  background-color: #222222;
